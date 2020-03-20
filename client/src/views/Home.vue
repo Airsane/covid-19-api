@@ -35,7 +35,7 @@ import axios from "axios";
 export default {
   name: "Home",
   async created() {
-    this.data = await axios.get("https://covid-19-api.glitch.me/country/All");
+    this.data = await axios.get("https://covid-19-api.glitch.me/api/country/All");
     this.data = this.data.data;
   },
   data() {
