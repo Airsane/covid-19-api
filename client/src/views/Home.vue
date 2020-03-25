@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <div v-if="img != null">
+      <img style="width: 70%; margin: auto; display: block;" v-bind:src="img">
+    </div>
     <div class="auto" style="width: 50%; margin: auto;">
       <input type="text" id="countySearch" placeholder="Write country name" class="form-control" />
     </div>
@@ -35,12 +38,13 @@ import axios from "axios";
 export default {
   name: "Home",
   async created() {
-    this.data = await axios.get("https://covid-19-api.glitch.me/api/country/All");
-    this.data = this.data.data;
+    this.data = await (await axios.get("https://covid-19-api.glitch.me/api/country/All")).data;
+    this.img = await (await axios.get('https://covid-19-api.glitch.me/api/graph')).data;
   },
   data() {
     return {
-      data: null
+      data: null,
+      img:null
     };
   },
 };

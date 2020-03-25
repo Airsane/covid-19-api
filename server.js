@@ -1,15 +1,10 @@
-// server.js
-// where your node app starts
-
-// we've started you off with Express (https://expressjs.com/)
-// but feel free to use whatever libraries or frameworks you'd like through `package.json`.
-const rp = require('request-promise');
 const express = require("express");
 const app = express();
 const keepalive = require('express-glitch-keepalive');
-const history = require('connect-history-api-fallback');
+const cors = require('cors');
 const tabletojson = require('tabletojson').Tabletojson;
-const countrys = require('country-list-js'); 
+const rp = require('request-promise');
+const {Chart} = require('./util');
 
 const homepage = "https://www.worldometers.info/coronavirus";
 let $ = require('cheerio');
@@ -17,10 +12,8 @@ let countries = [];
 let his = null;
 
 app.use(keepalive);
-
-//app.use(history());
-
 app.use(express.static("client/dist"));
+app.use(cors());
 
 app.get("/", function (request, response) {
     response.sendFile(__dirname + "/client/dist/index.html");
@@ -57,7 +50,16 @@ app.get('/api/history', (req, res, next) => {
         start();
     }
     res.json(his);
+})
 
+app.get('/api/graph',async (req,res,next)=>{
+    if(his == null)
+    {
+        start();
+    }
+    let test = new Chart(1280,720);
+    let data = await test.generateChart(his.map((d => d.Total.replace(',','').replace('>',''))),his.map((d => d.Total_2.replace(',','').replace('>',''))),his.map((d => d.Total_3.replace(',','').replace('>',''))),his.length);
+    res.send(data);
 })
 
 
