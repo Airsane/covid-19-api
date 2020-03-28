@@ -57,8 +57,18 @@ app.get('/api/graph',async (req,res,next)=>{
     {
         start();
     }
-    let test = new Chart(1280,720);
-    let data = await test.generateChart(his.map((d => d.Total.replace(',','').replace('>',''))),his.map((d => d.Total_2.replace(',','').replace('>',''))),his.map((d => d.Total_3.replace(',','').replace('>',''))),his.length);
+    let chart = new Chart(1280,720);
+    let data = await chart.generateChart1(his.map((d => d.Total.replace(',','').replace('>',''))),his.map((d => d.Total_2.replace(',','').replace('>',''))),his.map((d => d.Total_3.replace(',','').replace('>',''))),his.length);
+    res.send(data);
+})
+
+app.get('/api/graph2',async (req,res,next)=>{
+    if(his == null)
+    {
+        start();
+    }
+    let chart = new Chart(1280,720);
+    let data = await chart.generateChart2(his.map(d => d["28 March"].replace('>','')),his.length)
     res.send(data);
 })
 

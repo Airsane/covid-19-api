@@ -32,7 +32,24 @@ function Chart(width, height) {
             }
             return dateArr;
         },
-        this.generateChart = async (infected, death, cured, dayCount) => {
+        this.generateChart2 = async (infected,dayCount)=>{
+            const configuration = {
+                type:'bar',
+                data:{
+                    labels: this.generateDates(dayCount),
+                    datasets: [{
+                        label: 'Nakažení',
+                        backgroundColor: 'red',
+                        borderColor: 'red',
+                        borderWidth: 1,
+                        data: infected
+                    }]
+                }
+    
+            };
+            return await this.canvasRenderService.renderToDataURL(configuration);
+        }
+        this.generateChart1 = async (infected, death, cured, dayCount) => {
             const configuration = {
                 type: 'line',
                 data: {
@@ -97,7 +114,3 @@ function Chart(width, height) {
 
 module.exports.Chart = Chart;
 module.exports.Months = Months;
-
-
-
-
