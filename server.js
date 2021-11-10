@@ -34,7 +34,7 @@ app.get('/api/country/all', (req, res, next) => {
 
 
 app.get("/api/country/:name", (req, res, next) => {
-    let item = countries.find(x => x.name === req.params.name.toLowerCase().capitalize());
+    let item = countries.find(x => x.name.toLowerCase() === req.params.name.toLowerCase());
     if (item) {
         res.json(item);
     }
@@ -80,7 +80,6 @@ async function start() {
         countries.push(new Country($(e).children("td:nth-child(2)").text().trim(), $(e).children("td:nth-child(3)").text().trim(), $(e).children("td:nth-child(4)").text().trim(), $(e).children("td:nth-child(5)").text().trim(), $(e).children("td:nth-child(6)").text().trim(), $(e).children("td:nth-child(7)").text().trim()));
     })
     countries.shift();
-    console.log(countries[0]);
     console.log("Data recieved");
 }
 
