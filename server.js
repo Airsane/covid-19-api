@@ -1,17 +1,15 @@
 const express = require("express");
 const app = express();
-const keepalive = require('express-glitch-keepalive');
 const cors = require('cors');
 const tabletojson = require('tabletojson').Tabletojson;
-const rp = require('request-promise');
 const {Chart} = require('./util');
 
 const homepage = "https://www.worldometers.info/coronavirus";
 let $ = require('cheerio');
+const axios = require("axios");
 let countries = [];
 let his = null;
 
-app.use(keepalive);
 app.use(express.static("client/dist"));
 app.use(cors());
 
@@ -76,20 +74,14 @@ app.get('/api/graph2',async (req,res,next)=>{
 async function start() {
     console.log("Getting Data");
     countries = [];
-    let html = await rp(homepage);
+    let html = (await axios.get(homepage)).data;
     $ = $.load(html);
-    $('#main_table_countries_today tr').each((i, e) => {
-        countries.push(new Country($(e).children("td:nth-child(1)").text().trim(), $(e).children("td:nth-child(2)").text().trim(), $(e).children("td:nth-child(3)").text().trim(), $(e).children("td:nth-child(4)").text().trim(), $(e).children("td:nth-child(5)").text().trim(), $(e).children("td:nth-child(6)").text().trim()));
+    $('table#main_table_countries_today > tbody > tr:not(.row_continent)').each((i, e) => {
+        countries.push(new Country($(e).children("td:nth-child(2)").text().trim(), $(e).children("td:nth-child(3)").text().trim(), $(e).children("td:nth-child(4)").text().trim(), $(e).children("td:nth-child(5)").text().trim(), $(e).children("td:nth-child(6)").text().trim(), $(e).children("td:nth-child(7)").text().trim()));
     })
     countries.shift();
+    console.log(countries[0]);
     console.log("Data recieved");
-    tabletojson.convertUrl(
-        'https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_the_Czech_Republic#cite_note-:0-1',
-        function (tablesAsJson) {
-            his = tablesAsJson[3]
-        }
-    );
-
 }
 
 class Country {
